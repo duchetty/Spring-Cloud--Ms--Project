@@ -1,0 +1,14 @@
+package com.sbms.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.sbms.dto.AddressDto;
+
+@FeignClient(name="AddressService", url="http://localhost:9092", path="/address")
+public interface AddressClient {
+	
+	@GetMapping("/fetchAddress/{id}")
+	public AddressDto getAddressDetails(@PathVariable("id") int custId);
+}

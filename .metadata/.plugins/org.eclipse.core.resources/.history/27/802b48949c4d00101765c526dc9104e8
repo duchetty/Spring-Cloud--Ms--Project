@@ -1,0 +1,18 @@
+package com.sbms.exception;
+
+import java.time.LocalDate;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
+public class RestExceptionHandler {
+	@ExceptionHandler(NotFoundException.class)
+	public ResponseEntity<ApiError> handleNoCustomerException()
+	{
+		ApiError error=new ApiError(404,"Customer Doesn't exist", LocalDate.now().toString());
+		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+	}
+}

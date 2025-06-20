@@ -1,0 +1,95 @@
+package com.sbms.service;
+
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.sbms.dto.AddressDto;
+import com.sbms.dto.CustomerDto;
+import com.sbms.dto.CustomerResponse;
+import com.sbms.entity.Customer;
+import com.sbms.exception.NotFoundException;
+import com.sbms.repository.CustomerRepository;
+
+@Service
+public class CustomerServiceImpl implements CustomerService {
+	
+	@Autowired
+	private CustomerRepository repository;
+	
+	@Autowired
+	private ModelMapper mapper;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+
+	@Override
+	public Customer saveCustomer(CustomerDto customerDto) {
+		Customer customer=Customer.builder()
+				.custId(customerDto.getCustId())
+				.age(customerDto.getAge())
+				.mobileNo(customerDto.getMobileNo())
+				.email(customerDto.getEmail())
+				.name(customerDto.getName()).build();
+		
+		repository.save(customer);
+		return customer;
+	}
+
+	@Override
+	public CustomerDto fetchCustomer(int id) {
+	
+		Customer cusotmer=repository.findById(id).orElseThrow(()->new NotFoundException("Customer Doesn't exist"));
+		CustomerDto customerDto=mapper.map(cusotmer, CustomerDto.class);
+		return customerDto;
+	}
+
+	@Override
+	public List<Customer> fetchAllCustomers() {
+	
+		return repository.findAll();
+	}
+
+	@Override
+	public Customer updateCustomer(int id, CustomerDto customerDto) {
+		Customer customer=repository.findById(id).orElse(null);
+		
+		if(customerDto.getAge()!=0)
+			customer.setAge(customerDto.getAge());
+		else if(customerDto.getName()!=null)
+			customer.setName(customerDto.getName());
+		else if(customerDto.getMobileNo()!=null)
+			customer.setMobileNo(customerDto.getMobileNo());
+		else if(customerDto.getEmail()!=null)
+			customer.setEmail(customerDto.getEmail());
+		else if(customerDto.getCustId()!=0)
+			customer.setCustId(customerDto.getCustId());
+		
+		repository.save(customer);
+		return customer;
+	}
+
+	@Override
+	public void deleteCustomer(int id) {
+	
+		repository.deleteById(id);
+	}
+
+	@Override
+	public CustomerResponse getCusotmerwithAddress(int id) {
+		
+		CustomerResponse customerResponse=new CustomerResponse();
+		CustomerDto CustomerDto=fetchCustomer(id);
+		
+		AddressDto addressDto=restTemplate.getForObject("http://localhost:9092/address/fetch/"+CustomerDto.getCustId(), AddressDto.class);
+	
+		customerResponse.setCustomer(CustomerDto);
+		customerResponse.setAddress(addressDto);
+		return customerResponse;
+		
+	}
+
+}

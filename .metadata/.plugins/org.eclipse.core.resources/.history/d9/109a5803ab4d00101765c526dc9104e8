@@ -1,0 +1,76 @@
+package com.sbms.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sbms.dto.CustomerDto;
+import com.sbms.dto.CustomerResponse;
+import com.sbms.entity.Customer;
+import com.sbms.service.CustomerService;
+
+
+@RestController
+@RequestMapping("/customer")
+public class CustomerController {
+
+		
+	@Autowired
+	private CustomerService service;
+	
+	@PostMapping("/save")
+	public ResponseEntity<Customer> placeCustomer(@RequestBody CustomerDto customerDto)
+	{
+		Customer customer=service.saveCustomer(customerDto);
+		return new ResponseEntity<>(customer, HttpStatus.CREATED);
+	}
+	
+	@GetMapping("/fetch/{id}")
+	public ResponseEntity<CustomerDto> getCustomer(@PathVariable int id)
+	{
+		CustomerDto customerDto=service.fetchCustomer(id);
+		return new ResponseEntity<>(customerDto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/getAllCustomers")
+	@ResponseStatus(HttpStatus.OK)
+	public List<Customer> getAllCustomers()
+	{
+		return service.fetchAllCustomers();
+	}
+	
+	@PatchMapping("/updateCustomer/{id}")
+	public ResponseEntity<Customer> placeCustomer(@PathVariable int id, @RequestBody CustomerDto customerDto)
+	{
+		Customer customer=service.updateCustomer(id, customerDto);
+		return new ResponseEntity<>(customer, HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/deleteCustomer/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public String deleteCustomer(@PathVariable int id) 
+	{
+		service.deleteCustomer(id);
+		return "Customer record deleted sucessfully";
+	}
+	
+	
+	@GetMapping("/getCusotmerwithAddress/{id}")
+	public ResponseEntity<CustomerResponse> getCustomerDetails(int id)
+	{
+		CustomerResponse reponse=service.getCusotmerwithAddress(id);
+		return new ResponseEntity<>(reponse, HttpStatus.OK);
+	}
+	
+}

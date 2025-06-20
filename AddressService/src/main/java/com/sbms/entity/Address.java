@@ -1,0 +1,28 @@
+package com.sbms.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@SequenceGenerator(name="address_seq_gen", sequenceName="address_id_gen", allocationSize=1)
+
+public class Address {
+	@Id
+	@GeneratedValue(generator="address_seq_gen")
+	private int id;
+	private int custId;
+	private String street;
+	private String city;
+	private String state;
+	private Long pinCode;
+}

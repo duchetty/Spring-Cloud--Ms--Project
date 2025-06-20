@@ -1,0 +1,81 @@
+package com.sbms.service;
+
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sbms.dto.AddressDto;
+import com.sbms.entity.Address;
+import com.sbms.exception.NotFoundException;
+import com.sbms.repository.AddressRepository;
+
+@Service
+public class AddressServiceImpl implements AddressService {
+	
+	@Autowired
+	private AddressRepository repository;
+	
+	@Autowired
+	private ModelMapper mapper;
+
+
+	@Override
+	public Address saveAddress(AddressDto AddressDto) {
+		Address address=Address.builder()
+				.custId(AddressDto.getCustId())
+				.state(AddressDto.getState())
+				.street(AddressDto.getStreet())
+				.city(AddressDto.getCity())
+				.pinCode(AddressDto.getPinCode()).build();
+		
+		repository.save(address);
+		return address;
+	}
+
+	@Override
+	public AddressDto fetchAddress(int id) {
+
+		Address address=repository.findById(id).orElseThrow(()->new NotFoundException("Address Doesn't exist"));
+		AddressDto addressDto=mapper.map(address, AddressDto.class);
+		return addressDto;
+	}
+
+	@Override
+	public List<Address> fetchAllAddress() {
+		return repository.findAll();
+	}
+
+	@Override
+	public Address updateAddress(int id, AddressDto addressDto) {
+		Address address=repository.findById(id).orElse(null);
+		
+		if(addressDto.getCustId()!=0)
+			address.setCustId(addressDto.getCustId());
+		else if(addressDto.getStreet()!=null)
+			address.setStreet(addressDto.getStreet());
+		else if(addressDto.getCity()!=null)
+			address.setCity(addressDto.getCity());
+		else if(addressDto.getState()!=null)
+			address.setState(addressDto.getState());
+		else if(addressDto.getPinCode()!=0)
+			address.setPinCode(addressDto.getPinCode());
+		
+		repository.save(address);
+		return address;
+	}
+
+	@Override
+	public void deleteAddress(int id) {
+		repository.deleteById(id);
+		
+	}
+
+	@Override
+	public AddressDto getAddressDetails(int custId) {
+		reposit
+		return null;
+	}
+
+}

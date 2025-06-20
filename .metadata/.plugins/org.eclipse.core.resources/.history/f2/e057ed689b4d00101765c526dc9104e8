@@ -1,0 +1,6 @@
+package com.sbms.exception;
+
+@
+public class RestExceptionHandler {
+
+}

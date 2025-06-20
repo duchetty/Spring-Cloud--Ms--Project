@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: CustomerService
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    username: system
+    password: "0614"
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+server:
+  port: 9091

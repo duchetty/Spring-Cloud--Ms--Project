@@ -1,0 +1,76 @@
+package com.sbms.service;
+
+import java.util.List;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.sbms.dto.AddressDto;
+import com.sbms.entity.Address;
+import com.sbms.entity.Customer;
+import com.sbms.exception.NotFoundException;
+import com.sbms.repository.AddressRepository;
+
+@Service
+public class AddressServiceImpl implements AddressService {
+	
+	@Autowired
+	private AddressRepository repository;
+	
+	@Autowired
+	private ModelMapper mapper;
+
+	@Override
+	public Address saveCustomer(AddressDto AddressDto) {
+		Address address=Address.builder()
+				.custId(AddressDto.getCustId())
+				.state(AddressDto.getState())
+				.street(AddressDto.getStreet()
+				.city(AddressDto.getCity())
+				.pincode(AddressDto.getPinCode()).build();
+		
+		repository.save(address);
+		return address;
+	}
+
+	@Override
+	public AddressDto fetchCustomer(int id) {
+	
+		Customer cusotmer=repository.findById(id).orElseThrow(()->new NotFoundException("Customer Doesn't exist"));
+		AddressDto addressDto=mapper.map(cusotmer, AddressDto.class);
+		return addressDto;
+	}
+
+	@Override
+	public List<Customer> fetchAllCustomers() {
+	
+		return repository.findAll();
+	}
+
+	@Override
+	public Customer updateCustomer(int id, AddressDto addressDto) {
+		Customer customer=repository.findById(id).orElse(null);
+		
+		if(customerDto.getAge()!=0)
+			customer.setAge(customerDto.getAge());
+		else if(customerDto.getName()!=null)
+			customer.setName(customerDto.getName());
+		else if(customerDto.getMobileNo()!=null)
+			customer.setMobileNo(customerDto.getMobileNo());
+		else if(customerDto.getEmail()!=null)
+			customer.setEmail(customerDto.getEmail());
+		else if(customerDto.getCustId()!=0)
+			customer.setCustId(customerDto.getCustId());
+		
+		repository.save(customer);
+		return customer;
+	}
+
+	@Override
+	public void deleteCustomer(int id) {
+	
+		repository.deleteById(id);
+	}
+
+}

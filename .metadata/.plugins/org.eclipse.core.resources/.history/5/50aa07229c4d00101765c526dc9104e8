@@ -1,0 +1,10 @@
+package com.sbms.exception;
+
+@RestControlerAdvice
+public class RestExceptionHandler {
+	@ExceptionHandler(NotFoundException.class)
+	public ApiError handleNoCustomerException()
+	{
+		ApiError error=new ApiError(404L,"Customer Doesn't exist", "06-20-2025");
+	}
+}
