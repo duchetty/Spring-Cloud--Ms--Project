@@ -1,0 +1,28 @@
+server:
+  port: 9093
+spring:
+  application:
+    name: ApiGateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: CustomerService
+          uri: lb://CUSTOMERSERVICE
+          predicates:
+            - Path=/customer/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: CustomerService
+                fallbackUri: forward:/customerServiceFallback
+
+        - id: AddressService
+          uri: lb://ADDRESSSERVICE
+          predicates:
+            - Path=/address/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: AddressService
+                fallbackUri: forward:/addressServiceFallback

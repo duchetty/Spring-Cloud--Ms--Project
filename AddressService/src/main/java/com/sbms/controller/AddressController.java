@@ -19,6 +19,8 @@ import com.sbms.dto.AddressDto;
 import com.sbms.entity.Address;
 import com.sbms.service.AddressService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 
 @RestController
 @RequestMapping("/address")
@@ -70,5 +72,7 @@ public class AddressController {
 		AddressDto addressDto=service.getAddressDetails(custId);
 		return new ResponseEntity<>(addressDto, HttpStatus.OK);
 	}
+	
+	
 	
 }
